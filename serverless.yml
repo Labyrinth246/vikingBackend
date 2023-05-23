@@ -1,0 +1,38 @@
+service: my-service
+frameworkVersion: '3'
+provider:
+  name: aws
+  runtime: nodejs12.x
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - "ec2:CreateNetworkInterface"
+        - "rds:*"
+      Resource: "arn:aws:rds:us-east-1:876746965565:db:serverless-mysql"
+functions:
+  myTestFunction:
+    handler: javascript-file.myTestFunction
+    events:
+      - http:
+          path: /path
+          method: get
+  createCustomer:
+    handler: createCustomer.createCustomer
+    events:
+    - httpApi:
+        path: /createCustomers
+        method: post
+  getCustomers:
+    handler: getCustomers.getCustomers
+    events: 
+      - httpApi:
+          path: /getCustomers
+          method: get
+  hello:
+    handler: handler.hello
+    events:
+      - http:
+          path: hello/get
+          method: get
+plugins:
+  - serverless-offline
